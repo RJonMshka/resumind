@@ -1,0 +1,125 @@
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  padding: var(--space-lg);
+  background: var(--bg-secondary);
+  border-left: 1px solid var(--border);
+  overflow-y: auto;
+  height: 100vh;
+}
+
+.heading {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.empty {
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+  line-height: 1.6;
+  padding: var(--space-md) 0;
+}
+
+.scoreSection {
+  display: flex;
+  gap: var(--space-lg);
+  justify-content: center;
+}
+
+.scoreBox {
+  text-align: center;
+}
+
+.scoreValue {
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.scoreLabel {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  margin-top: var(--space-xs);
+}
+
+.delta {
+  text-align: center;
+  font-size: var(--text-sm);
+  font-weight: 500;
+}
+
+.analysisList {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.analysisItem {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-sm);
+  padding: var(--space-sm) 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.analysisItem:last-child {
+  border-bottom: none;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-top: 6px;
+  flex-shrink: 0;
+}
+
+.itemText {
+  font-size: var(--text-sm);
+  font-weight: 500;
+}
+
+.itemDetail {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  margin-top: var(--space-xs);
+}
+
+.legend {
+  display: flex;
+  gap: var(--space-md);
+  padding: var(--space-sm) 0;
+  border-top: 1px solid var(--border);
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+}
+
+.exportButton {
+  width: 100%;
+  padding: var(--space-sm) var(--space-md);
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+  transition: background var(--transition-fast);
+  margin-top: auto;
+}
+
+.exportButton:hover {
+  background: var(--bg-hover);
+}
+
+.exportButton:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
