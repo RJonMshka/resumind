@@ -46,66 +46,70 @@ export default function ConfigPanel({
 
   return (
     <div className={styles.panel}>
-      <h1 className={styles.title}>Resumind</h1>
+      <div className={styles.scrollable}>
+        <h1 className={styles.title}>Resumind</h1>
 
-      <div className={styles.group}>
-        <label className={styles.label}>Provider</label>
-        <select
-          className={styles.select}
-          value={provider}
-          onChange={handleProviderChange}
-        >
-          {PROVIDERS.map((p) => (
-            <option key={p.id} value={p.id}>{p.label}</option>
-          ))}
-        </select>
-      </div>
+        <div className={styles.group}>
+          <label className={styles.label}>Provider</label>
+          <select
+            className={styles.select}
+            value={provider}
+            onChange={handleProviderChange}
+          >
+            {PROVIDERS.map((p) => (
+              <option key={p.id} value={p.id}>{p.label}</option>
+            ))}
+          </select>
+        </div>
 
-      <div className={styles.group}>
-        <label className={styles.label}>Model</label>
-        <select
-          className={styles.select}
-          value={model}
-          onChange={(e) => onModelChange(e.target.value)}
-        >
-          {models.map((m) => (
-            <option key={m} value={m}>{m}</option>
-          ))}
-        </select>
-      </div>
+        <div className={styles.group}>
+          <label className={styles.label}>Model</label>
+          <select
+            className={styles.select}
+            value={model}
+            onChange={(e) => onModelChange(e.target.value)}
+          >
+            {models.map((m) => (
+              <option key={m} value={m}>{m}</option>
+            ))}
+          </select>
+        </div>
 
-      <div className={styles.group}>
-        <label className={styles.label}>API Key</label>
-        <input
-          type="password"
-          className={styles.input}
-          placeholder="sk-..."
-          value={apiKey}
-          onChange={(e) => onApiKeyChange(e.target.value)}
-        />
-      </div>
-
-      <div className={styles.rulesSection}>
-        <div className={styles.label}>Rules</div>
-        {rules.map((rule) => (
-          <RuleToggle
-            key={rule.id}
-            label={rule.label}
-            desc={rule.desc}
-            checked={rule.on}
-            onChange={(checked) => onRuleToggle(rule.id, checked)}
+        <div className={styles.group}>
+          <label className={styles.label}>API Key</label>
+          <input
+            type="password"
+            className={styles.input}
+            placeholder="sk-..."
+            value={apiKey}
+            onChange={(e) => onApiKeyChange(e.target.value)}
           />
-        ))}
+        </div>
+
+        <div className={styles.rulesSection}>
+          <div className={styles.label}>Rules</div>
+          {rules.map((rule) => (
+            <RuleToggle
+              key={rule.id}
+              label={rule.label}
+              desc={rule.desc}
+              checked={rule.on}
+              onChange={(checked) => onRuleToggle(rule.id, checked)}
+            />
+          ))}
+        </div>
       </div>
 
-      <button
-        type="button"
-        className={styles.runButton}
-        disabled={!canRun || loading}
-        onClick={onRun}
-      >
-        {loading ? "Running..." : "Run Analysis"}
-      </button>
+      <div className={styles.stickyFooter}>
+        <button
+          type="button"
+          className={styles.runButton}
+          disabled={!canRun || loading}
+          onClick={onRun}
+        >
+          {loading ? "Running..." : "Run Analysis"}
+        </button>
+      </div>
     </div>
   );
 }

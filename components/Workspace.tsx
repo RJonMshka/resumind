@@ -1,5 +1,6 @@
 "use client";
 
+import type { ExtractionResult, InputFormat } from "@/types";
 import UploadZone from "./UploadZone";
 import styles from "./Workspace.module.css";
 
@@ -8,6 +9,7 @@ type Tab = "resume" | "jd" | "output";
 interface WorkspaceProps {
   resumeText: string;
   onResumeChange: (text: string) => void;
+  onFileExtracted: (result: ExtractionResult) => void;
   jobDescription: string;
   onJobDescriptionChange: (text: string) => void;
   optimizedResume: string | null;
@@ -15,6 +17,7 @@ interface WorkspaceProps {
   onTabChange: (tab: Tab) => void;
   error: string | null;
   onUploadError: (message: string) => void;
+  inputFormat: InputFormat;
 }
 
 const TABS: { id: Tab; label: string }[] = [
@@ -26,6 +29,7 @@ const TABS: { id: Tab; label: string }[] = [
 export default function Workspace({
   resumeText,
   onResumeChange,
+  onFileExtracted,
   jobDescription,
   onJobDescriptionChange,
   optimizedResume,
@@ -33,6 +37,7 @@ export default function Workspace({
   onTabChange,
   error,
   onUploadError,
+  inputFormat,
 }: WorkspaceProps) {
   return (
     <div className={styles.workspace}>
@@ -53,11 +58,16 @@ export default function Workspace({
         {activeTab === "resume" && (
           <>
             <UploadZone
-              onTextExtracted={onResumeChange}
+              onFileExtracted={onFileExtracted}
               onError={onUploadError}
             />
             {error && (
               <div className={styles.error}>{error}</div>
+            )}
+            {inputFormat === "docx" && resumeText && (
+              <div className={styles.formatBadge}>
+                DOCX format detected — original formatting will be preserved on export
+              </div>
             )}
             <textarea
               className={styles.textarea}

@@ -1,12 +1,15 @@
+import type { ExtractionResult, InputFormat } from "@/types";
+import mammoth from "mammoth";
+
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 MB
-const ALLOWED_TYPES = [".txt", ".pdf"];
+const ALLOWED_TYPES = [".txt", ".pdf", ".docx"];
 
 export function validateFile(file: File): string | null {
   const name = file.name.toLowerCase();
   const ext = name.slice(name.lastIndexOf("."));
 
   if (!ALLOWED_TYPES.includes(ext)) {
-    return "Only .txt and .pdf files are supported";
+    return "Only .txt, .pdf, and .docx files are supported";
   }
   if (file.size > MAX_FILE_SIZE) {
     return "File exceeds 5 MB limit";
@@ -17,18 +20,31 @@ export function validateFile(file: File): string | null {
   return null;
 }
 
-export async function extractText(file: File): Promise<string> {
+export function detectFormat(file: File): InputFormat {
+  const name = file.name.toLowerCase();
+  if (name.endsWith(".docx")) return "docx";
+  if (name.endsWith(".pdf")) return "pdf";
+  return "txt";
+}
+
+export async function extractText(file: File): Promise<ExtractionResult> {
   const name = file.name.toLowerCase();
 
   if (name.endsWith(".txt")) {
-    return readTextFile(file);
+    const text = await readTextFile(file);
+    return { text, format: "txt" };
   }
 
   if (name.endsWith(".pdf")) {
-    return parsePDF(file);
+    const text = await parsePDF(file);
+    return { text, format: "pdf" };
   }
 
-  throw new Error("Unsupported file type — upload a .txt or .pdf file");
+  if (name.endsWith(".docx")) {
+    return parseDocx(file);
+  }
+
+  throw new Error("Unsupported file type — upload a .txt, .pdf, or .docx file");
 }
 
 function readTextFile(file: File): Promise<string> {
@@ -63,4 +79,20 @@ async function parsePDF(file: File): Promise<string> {
 
   const data = await res.json();
   return (data as Record<string, string>).text;
+}
+
+async function parseDocx(file: File): Promise<ExtractionResult> {
+  const arrayBuffer = await file.arrayBuffer();
+  const result = await mammoth.extractRawText({ arrayBuffer });
+  const text = result.value.trim();
+
+  if (text.length === 0) {
+    throw new Error("No text found in .docx file");
+  }
+
+  return {
+    text,
+    format: "docx",
+    docxBuffer: arrayBuffer,
+  };
 }

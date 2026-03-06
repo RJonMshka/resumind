@@ -28,10 +28,57 @@ export interface OptimizationResult {
   after_score: number;    // 0-100
   analysis: AnalysisItem[];
   optimized_resume: string;
+  structured_resume?: StructuredResume;  // populated when PDF export available
 }
+
+// --- Structured resume for PDF template rendering ---
+
+export interface ContactInfo {
+  name: string;
+  email?: string;
+  phone?: string;
+  location?: string;
+  linkedin?: string;
+  website?: string;
+}
+
+export interface ExperienceItem {
+  title: string;
+  company: string;
+  location?: string;
+  dates: string;
+  bullets: string[];
+}
+
+export interface EducationItem {
+  degree: string;
+  institution: string;
+  dates?: string;
+  details?: string;
+}
+
+export interface StructuredResume {
+  contact: ContactInfo;
+  summary?: string;
+  experience: ExperienceItem[];
+  education: EducationItem[];
+  skills: string[];
+}
+
+export type TemplateId = "classic" | "modern" | "minimal" | "executive";
 
 export interface LLMError {
   code: "auth" | "rate_limit" | "context_length" | "network" | "unknown";
   message: string;
   retryable: boolean;
+}
+
+// --- Format-preserving output types ---
+
+export type InputFormat = "txt" | "pdf" | "docx" | "paste";
+
+export interface ExtractionResult {
+  text: string;
+  format: InputFormat;
+  docxBuffer?: ArrayBuffer;  // original .docx bytes for round-trip rebuild
 }

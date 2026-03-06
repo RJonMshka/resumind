@@ -90,3 +90,12 @@
   font-size: var(--text-sm);
   background: rgba(244, 67, 54, 0.05);
 }
+
+.formatBadge {
+  padding: var(--space-sm) var(--space-md);
+  border: 1px solid var(--green);
+  border-radius: var(--radius-sm);
+  color: var(--green);
+  font-size: var(--text-xs);
+  background: rgba(76, 175, 80, 0.08);
+}

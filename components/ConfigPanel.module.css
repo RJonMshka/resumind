@@ -1,12 +1,20 @@
 .panel {
   display: flex;
   flex-direction: column;
-  gap: var(--space-md);
-  padding: var(--space-lg);
   background: var(--bg-secondary);
   border-right: 1px solid var(--border);
-  overflow-y: auto;
   height: 100vh;
+  overflow: hidden;
+}
+
+.scrollable {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--space-lg);
+  padding-bottom: var(--space-sm);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
 }
 
 .title {
@@ -48,15 +56,21 @@
   gap: var(--space-xs);
 }
 
+.stickyFooter {
+  flex-shrink: 0;
+  padding: var(--space-md) var(--space-lg);
+  border-top: 1px solid var(--border);
+  background: var(--bg-secondary);
+}
+
 .runButton {
   width: 100%;
   padding: var(--space-sm) var(--space-md);
   background: var(--accent);
-  color: white;
+  color: var(--bg-primary);
   border-radius: var(--radius-md);
   font-weight: 600;
   transition: background var(--transition-fast);
-  margin-top: auto;
 }
 
 .runButton:hover:not(:disabled) {

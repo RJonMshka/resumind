@@ -1,15 +1,16 @@
 "use client";
 
 import { useRef, useState, useCallback } from "react";
+import type { ExtractionResult } from "@/types";
 import { validateFile, extractText } from "@/lib/file";
 import styles from "./UploadZone.module.css";
 
 interface UploadZoneProps {
-  onTextExtracted: (text: string) => void;
+  onFileExtracted: (result: ExtractionResult) => void;
   onError: (message: string) => void;
 }
 
-export default function UploadZone({ onTextExtracted, onError }: UploadZoneProps) {
+export default function UploadZone({ onFileExtracted, onError }: UploadZoneProps) {
   const [dragging, setDragging] = useState(false);
   const [loading, setLoading] = useState(false);
   const [uploadedName, setUploadedName] = useState<string | null>(null);
@@ -24,15 +25,15 @@ export default function UploadZone({ onTextExtracted, onError }: UploadZoneProps
     setLoading(true);
     setUploadedName(null);
     try {
-      const text = await extractText(file);
-      onTextExtracted(text);
+      const result = await extractText(file);
+      onFileExtracted(result);
       setUploadedName(file.name);
     } catch (err) {
       onError(err instanceof Error ? err.message : "Failed to extract text");
     } finally {
       setLoading(false);
     }
-  }, [onTextExtracted, onError]);
+  }, [onFileExtracted, onError]);
 
   const handleDrop = useCallback((e: React.DragEvent) => {
     e.preventDefault();
@@ -80,12 +81,12 @@ export default function UploadZone({ onTextExtracted, onError }: UploadZoneProps
         ? "Extracting text..."
         : uploadedName
           ? `Loaded: ${uploadedName}`
-          : "Drop .txt or .pdf here, or click to browse"
+          : "Drop .txt, .pdf, or .docx here, or click to browse"
       }
       <input
         ref={inputRef}
         type="file"
-        accept=".txt,.pdf"
+        accept=".txt,.pdf,.docx"
         className={styles.hidden}
         onChange={handleInputChange}
       />

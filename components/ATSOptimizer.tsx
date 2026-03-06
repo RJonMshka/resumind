@@ -1,14 +1,17 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import type { ProviderId, Rule, OptimizationResult } from "@/types";
+import type { ProviderId, Rule, OptimizationResult, InputFormat, ExtractionResult, TemplateId } from "@/types";
 import { DEFAULT_RULES } from "@/lib/rules";
 import { callLLM } from "@/lib/llm";
 import { buildSystemPrompt, buildUserMessage, validateInputs } from "@/lib/prompt";
 import { parseOptimizationResult } from "@/lib/parser";
+import { rebuildDocx } from "@/lib/docx";
+// renderPdf is loaded dynamically — @react-pdf/renderer is client-only
 import ConfigPanel from "./ConfigPanel";
 import Workspace from "./Workspace";
 import AnalysisPanel from "./AnalysisPanel";
+import TemplateSelector from "./TemplateSelector";
 import styles from "./ATSOptimizer.module.css";
 
 export default function ATSOptimizer() {
@@ -22,6 +25,10 @@ export default function ATSOptimizer() {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<"resume" | "jd" | "output">("resume");
+  const [inputFormat, setInputFormat] = useState<InputFormat>("paste");
+  const [docxBuffer, setDocxBuffer] = useState<ArrayBuffer | null>(null);
+  const [exporting, setExporting] = useState<boolean>(false);
+  const [templatePickerOpen, setTemplatePickerOpen] = useState<boolean>(false);
 
   const canRun = resumeText.trim().length > 0
     && jobDescription.trim().length > 0
@@ -33,6 +40,23 @@ export default function ATSOptimizer() {
       prev.map((rule) => (rule.id === id ? { ...rule, on: checked } : rule))
     );
   }, []);
+
+  const handleFileExtracted = useCallback((extraction: ExtractionResult) => {
+    setResumeText(extraction.text);
+    setInputFormat(extraction.format);
+    setDocxBuffer(extraction.docxBuffer ?? null);
+    setError(null);
+  }, []);
+
+  const handleResumeTextChange = useCallback((text: string) => {
+    setResumeText(text);
+    // If user manually edits the text, switch to paste mode
+    // (they may have typed over the extracted text)
+    if (inputFormat !== "paste") {
+      setInputFormat("paste");
+      setDocxBuffer(null);
+    }
+  }, [inputFormat]);
 
   const handleRun = useCallback(async () => {
     const inputError = validateInputs(resumeText, jobDescription);
@@ -77,7 +101,7 @@ export default function ATSOptimizer() {
     setError(message);
   }, []);
 
-  const handleExport = useCallback(() => {
+  const handleExportTxt = useCallback(() => {
     if (!result?.optimized_resume) return;
     const blob = new Blob([result.optimized_resume], { type: "text/plain" });
     const url = URL.createObjectURL(blob);
@@ -87,6 +111,62 @@ export default function ATSOptimizer() {
     a.click();
     URL.revokeObjectURL(url);
   }, [result]);
+
+  const handleExportDocx = useCallback(async () => {
+    if (!result?.optimized_resume || !docxBuffer) return;
+    setExporting(true);
+    try {
+      const newDocxBuffer = await rebuildDocx(docxBuffer, result.optimized_resume);
+      const blob = new Blob([newDocxBuffer], {
+        type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "resume_optimized.docx";
+      a.click();
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to rebuild DOCX");
+    } finally {
+      setExporting(false);
+    }
+  }, [result, docxBuffer]);
+
+  const handleOpenTemplatePicker = useCallback(() => {
+    if (!result?.structured_resume) return;
+    setTemplatePickerOpen(true);
+  }, [result]);
+
+  const handleExportPdf = useCallback(async (templateId: TemplateId) => {
+    if (!result?.structured_resume) return;
+    setExporting(true);
+    try {
+      const { renderPdf } = await import("@/lib/templates/renderer");
+      const blob = await renderPdf(templateId, result.structured_resume);
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "resume_optimized.pdf";
+      a.click();
+      URL.revokeObjectURL(url);
+      setTemplatePickerOpen(false);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to generate PDF");
+    } finally {
+      setExporting(false);
+    }
+  }, [result]);
+
+  const handleExport = useCallback(() => {
+    if (inputFormat === "docx" && docxBuffer) {
+      handleExportDocx();
+    } else if (result?.structured_resume) {
+      handleOpenTemplatePicker();
+    } else {
+      handleExportTxt();
+    }
+  }, [inputFormat, docxBuffer, result, handleExportDocx, handleExportTxt, handleOpenTemplatePicker]);
 
   return (
     <div className={styles.container}>
@@ -106,7 +186,8 @@ export default function ATSOptimizer() {
       />
       <Workspace
         resumeText={resumeText}
-        onResumeChange={setResumeText}
+        onResumeChange={handleResumeTextChange}
+        onFileExtracted={handleFileExtracted}
         jobDescription={jobDescription}
         onJobDescriptionChange={setJobDescription}
         optimizedResume={result?.optimized_resume ?? null}
@@ -114,10 +195,21 @@ export default function ATSOptimizer() {
         onTabChange={setActiveTab}
         error={error}
         onUploadError={handleUploadError}
+        inputFormat={inputFormat}
       />
       <AnalysisPanel
         result={result}
         onExport={handleExport}
+        onExportTxt={handleExportTxt}
+        inputFormat={inputFormat}
+        exporting={exporting}
+        hasPdfExport={!!result?.structured_resume}
+      />
+      <TemplateSelector
+        open={templatePickerOpen}
+        exporting={exporting}
+        onSelect={handleExportPdf}
+        onClose={() => setTemplatePickerOpen(false)}
       />
     </div>
   );
