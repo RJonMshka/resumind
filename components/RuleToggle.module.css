@@ -7,11 +7,11 @@
 
 .toggle {
   position: relative;
-  width: 36px;
-  height: 20px;
-  border-radius: 10px;
-  background: var(--bg-tertiary);
-  border: 1px solid var(--border);
+  width: 32px;
+  height: 18px;
+  border-radius: 9px;
+  background: rgba(255, 255, 255, 0.06);
+  border: none;
   flex-shrink: 0;
   cursor: pointer;
   transition: background var(--transition-fast);
@@ -19,7 +19,6 @@
 
 .toggle[data-checked="true"] {
   background: var(--accent);
-  border-color: var(--accent);
 }
 
 .toggle::after {
@@ -30,17 +29,18 @@
   width: 14px;
   height: 14px;
   border-radius: 50%;
-  background: white;
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
   transition: transform var(--transition-fast);
 }
 
 .toggle[data-checked="true"]::after {
-  transform: translateX(16px);
+  transform: translateX(14px);
 }
 
 .toggle:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
+  outline: none;
+  box-shadow: 0 0 0 2px var(--bg-primary), 0 0 0 4px rgba(124, 106, 239, 0.5);
 }
 
 .text {

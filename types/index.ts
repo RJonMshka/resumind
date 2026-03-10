@@ -1,4 +1,7 @@
-export type RuleId = "preserve_voice" | "no_fabricate" | "quantify" | "senior_lang" | "ats_keywords" | "concise";
+export type RuleId =
+  | "preserve_voice" | "no_fabricate" | "quantify" | "senior_lang"
+  | "ats_keywords" | "concise" | "action_verbs" | "keyword_density"
+  | "section_order" | "gap_flag" | "bullet_format";
 
 export interface Rule {
   id: RuleId;

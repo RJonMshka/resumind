@@ -4,57 +4,70 @@ import { COLORS } from "./shared";
 
 const styles = StyleSheet.create({
   page: {
-    paddingTop: 40,
+    paddingTop: 48,
     paddingBottom: 48,
-    paddingHorizontal: 48,
+    paddingHorizontal: 54,
     fontFamily: "Helvetica",
     fontSize: 10,
     color: COLORS.black,
-    lineHeight: 1.5,
+    lineHeight: 1.4,
   },
+
+  /* ---- Header ---- */
   header: {
     textAlign: "center",
-    marginBottom: 16,
-    paddingBottom: 12,
-    borderBottomWidth: 2,
+    paddingBottom: 14,
+    borderBottomWidth: 1.5,
     borderBottomColor: COLORS.black,
+    marginBottom: 6,
   },
   name: {
-    fontSize: 24,
+    fontSize: 22,
     fontFamily: "Helvetica-Bold",
-    marginBottom: 4,
+    letterSpacing: 0.5,
+    marginBottom: 6,
   },
   contactLine: {
     fontSize: 9,
     color: COLORS.mediumGray,
+    lineHeight: 1.6,
   },
+
+  /* ---- Sections ---- */
   section: {
-    marginTop: 12,
+    marginTop: 18,
   },
   sectionTitle: {
-    fontSize: 12,
+    fontSize: 11,
     fontFamily: "Helvetica-Bold",
     textTransform: "uppercase",
-    letterSpacing: 1,
-    marginBottom: 6,
-    paddingBottom: 2,
-    borderBottomWidth: 1,
+    letterSpacing: 1.2,
+    paddingBottom: 4,
+    marginBottom: 8,
+    borderBottomWidth: 0.75,
     borderBottomColor: COLORS.border,
+    color: COLORS.darkGray,
   },
+
+  /* ---- Summary ---- */
   summary: {
     fontSize: 10,
     color: COLORS.darkGray,
-    marginBottom: 4,
+    lineHeight: 1.55,
   },
-  jobRow: {
+
+  /* ---- Experience ---- */
+  jobBlock: {
+    marginBottom: 12,
+  },
+  jobHeader: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "baseline",
     marginBottom: 2,
-    marginTop: 6,
   },
   jobTitle: {
-    fontSize: 11,
+    fontSize: 10.5,
     fontFamily: "Helvetica-Bold",
   },
   dates: {
@@ -64,21 +77,27 @@ const styles = StyleSheet.create({
   company: {
     fontSize: 10,
     color: COLORS.mediumGray,
-    marginBottom: 3,
+    marginBottom: 5,
   },
   bullet: {
     fontSize: 10,
-    marginLeft: 12,
-    marginBottom: 2,
+    marginLeft: 10,
+    marginBottom: 3,
+    lineHeight: 1.45,
   },
-  eduRow: {
+
+  /* ---- Education ---- */
+  eduBlock: {
+    marginBottom: 8,
+  },
+  eduHeader: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "baseline",
-    marginTop: 4,
+    marginBottom: 2,
   },
   degree: {
-    fontSize: 11,
+    fontSize: 10.5,
     fontFamily: "Helvetica-Bold",
   },
   institution: {
@@ -88,17 +107,15 @@ const styles = StyleSheet.create({
   eduDetail: {
     fontSize: 9,
     color: COLORS.lightGray,
-    marginLeft: 12,
-    marginTop: 1,
-  },
-  skillsRow: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    gap: 6,
+    marginLeft: 10,
     marginTop: 2,
   },
-  skill: {
+
+  /* ---- Skills ---- */
+  skillsText: {
     fontSize: 10,
+    color: COLORS.darkGray,
+    lineHeight: 1.6,
   },
 });
 
@@ -119,6 +136,7 @@ export default function ClassicTemplate({ resume }: Props) {
   return (
     <Document>
       <Page size="A4" style={styles.page}>
+        {/* Header */}
         <View style={styles.header}>
           <Text style={styles.name}>{contact.name}</Text>
           {contactParts.length > 0 && (
@@ -126,6 +144,7 @@ export default function ClassicTemplate({ resume }: Props) {
           )}
         </View>
 
+        {/* Summary */}
         {summary && (
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Professional Summary</Text>
@@ -133,12 +152,17 @@ export default function ClassicTemplate({ resume }: Props) {
           </View>
         )}
 
+        {/* Experience */}
         {experience.length > 0 && (
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Experience</Text>
             {experience.map((exp, i) => (
-              <View key={i} wrap={false}>
-                <View style={styles.jobRow}>
+              <View
+                key={i}
+                style={i < experience.length - 1 ? styles.jobBlock : { ...styles.jobBlock, marginBottom: 0 }}
+                wrap={false}
+              >
+                <View style={styles.jobHeader}>
                   <Text style={styles.jobTitle}>{exp.title}</Text>
                   <Text style={styles.dates}>{exp.dates}</Text>
                 </View>
@@ -146,19 +170,23 @@ export default function ClassicTemplate({ resume }: Props) {
                   {exp.company}{exp.location ? `, ${exp.location}` : ""}
                 </Text>
                 {exp.bullets.map((b, j) => (
-                  <Text key={j} style={styles.bullet}>{"  \u2022  "}{b}</Text>
+                  <Text key={j} style={styles.bullet}>{"\u2022  "}{b}</Text>
                 ))}
               </View>
             ))}
           </View>
         )}
 
+        {/* Education */}
         {education.length > 0 && (
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Education</Text>
             {education.map((edu, i) => (
-              <View key={i}>
-                <View style={styles.eduRow}>
+              <View
+                key={i}
+                style={i < education.length - 1 ? styles.eduBlock : { ...styles.eduBlock, marginBottom: 0 }}
+              >
+                <View style={styles.eduHeader}>
                   <Text style={styles.degree}>{edu.degree}</Text>
                   {edu.dates && <Text style={styles.dates}>{edu.dates}</Text>}
                 </View>
@@ -171,16 +199,11 @@ export default function ClassicTemplate({ resume }: Props) {
           </View>
         )}
 
+        {/* Skills */}
         {skills.length > 0 && (
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Skills</Text>
-            <View style={styles.skillsRow}>
-              {skills.map((skill, i) => (
-                <Text key={i} style={styles.skill}>
-                  {skill}{i < skills.length - 1 ? "," : ""}
-                </Text>
-              ))}
-            </View>
+            <Text style={styles.skillsText}>{skills.join("  \u2022  ")}</Text>
           </View>
         )}
       </Page>

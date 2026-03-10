@@ -4,42 +4,46 @@ import { COLORS } from "./shared";
 
 const styles = StyleSheet.create({
   page: {
-    paddingTop: 44,
+    paddingTop: 48,
     paddingBottom: 48,
-    paddingHorizontal: 48,
+    paddingHorizontal: 52,
     fontFamily: "Helvetica",
     fontSize: 10,
     color: COLORS.black,
-    lineHeight: 1.5,
+    lineHeight: 1.45,
   },
+
+  /* ---- Header ---- */
   header: {
-    marginBottom: 8,
-    paddingBottom: 10,
-    borderBottomWidth: 3,
+    paddingBottom: 12,
+    borderBottomWidth: 2.5,
     borderBottomColor: COLORS.black,
+    marginBottom: 6,
   },
   name: {
-    fontSize: 26,
+    fontSize: 24,
     fontFamily: "Helvetica-Bold",
     textTransform: "uppercase",
     letterSpacing: 3,
-    marginBottom: 6,
+    marginBottom: 8,
   },
   contactRow: {
     flexDirection: "row",
     flexWrap: "wrap",
-    gap: 12,
+    gap: 14,
   },
   contactItem: {
     fontSize: 9,
     color: COLORS.mediumGray,
   },
+
+  /* ---- Summary ---- */
   summarySection: {
-    marginTop: 12,
-    marginBottom: 4,
-    paddingVertical: 10,
-    paddingHorizontal: 14,
-    backgroundColor: "#f8f8f8",
+    marginTop: 16,
+    marginBottom: 6,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    backgroundColor: "#f7f7f8",
     borderLeftWidth: 3,
     borderLeftColor: COLORS.black,
   },
@@ -48,31 +52,34 @@ const styles = StyleSheet.create({
     color: COLORS.darkGray,
     lineHeight: 1.6,
   },
+
+  /* ---- Sections ---- */
   section: {
-    marginTop: 14,
+    marginTop: 20,
   },
   sectionTitle: {
-    fontSize: 13,
+    fontSize: 12,
     fontFamily: "Helvetica-Bold",
     textTransform: "uppercase",
     letterSpacing: 2,
-    marginBottom: 8,
-    paddingBottom: 4,
-    borderBottomWidth: 2,
+    paddingBottom: 5,
+    marginBottom: 10,
+    borderBottomWidth: 1.5,
     borderBottomColor: COLORS.black,
   },
-  jobContainer: {
-    marginTop: 8,
-    marginBottom: 4,
+
+  /* ---- Experience ---- */
+  jobBlock: {
+    marginBottom: 14,
   },
   jobHeader: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "baseline",
-    marginBottom: 1,
+    marginBottom: 2,
   },
   jobTitle: {
-    fontSize: 11,
+    fontSize: 10.5,
     fontFamily: "Helvetica-Bold",
     textTransform: "uppercase",
   },
@@ -85,23 +92,27 @@ const styles = StyleSheet.create({
     fontSize: 10,
     fontFamily: "Helvetica-Oblique",
     color: COLORS.mediumGray,
-    marginBottom: 4,
+    marginBottom: 6,
   },
   bullet: {
     fontSize: 10,
-    marginLeft: 14,
-    marginBottom: 2,
+    marginLeft: 12,
+    marginBottom: 3,
+    lineHeight: 1.45,
   },
-  eduContainer: {
-    marginTop: 6,
+
+  /* ---- Education ---- */
+  eduBlock: {
+    marginBottom: 10,
   },
-  eduRow: {
+  eduHeader: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "baseline",
+    marginBottom: 2,
   },
   degree: {
-    fontSize: 11,
+    fontSize: 10.5,
     fontFamily: "Helvetica-Bold",
   },
   institution: {
@@ -112,21 +123,22 @@ const styles = StyleSheet.create({
   eduDetail: {
     fontSize: 9,
     color: COLORS.lightGray,
-    marginLeft: 14,
-    marginTop: 1,
+    marginLeft: 12,
+    marginTop: 2,
   },
+
+  /* ---- Skills ---- */
   skillsGrid: {
     flexDirection: "row",
     flexWrap: "wrap",
-    gap: 4,
-    marginTop: 4,
+    gap: 6,
   },
   skillTag: {
     fontSize: 9,
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-    backgroundColor: "#f0f0f0",
-    borderWidth: 1,
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    backgroundColor: "#f0f0f2",
+    borderWidth: 0.75,
     borderColor: COLORS.border,
   },
 });
@@ -165,12 +177,16 @@ export default function ExecutiveTemplate({ resume }: Props) {
           </View>
         )}
 
-        {/* Experience */}
+        {/* Professional Experience */}
         {experience.length > 0 && (
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Professional Experience</Text>
             {experience.map((exp, i) => (
-              <View key={i} style={styles.jobContainer} wrap={false}>
+              <View
+                key={i}
+                style={i < experience.length - 1 ? styles.jobBlock : { ...styles.jobBlock, marginBottom: 0 }}
+                wrap={false}
+              >
                 <View style={styles.jobHeader}>
                   <Text style={styles.jobTitle}>{exp.title}</Text>
                   <Text style={styles.dates}>{exp.dates}</Text>
@@ -191,8 +207,11 @@ export default function ExecutiveTemplate({ resume }: Props) {
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Education</Text>
             {education.map((edu, i) => (
-              <View key={i} style={styles.eduContainer}>
-                <View style={styles.eduRow}>
+              <View
+                key={i}
+                style={i < education.length - 1 ? styles.eduBlock : { ...styles.eduBlock, marginBottom: 0 }}
+              >
+                <View style={styles.eduHeader}>
                   <Text style={styles.degree}>{edu.degree}</Text>
                   {edu.dates && <Text style={styles.dates}>{edu.dates}</Text>}
                 </View>
@@ -203,7 +222,7 @@ export default function ExecutiveTemplate({ resume }: Props) {
           </View>
         )}
 
-        {/* Skills */}
+        {/* Core Competencies */}
         {skills.length > 0 && (
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Core Competencies</Text>

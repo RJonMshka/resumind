@@ -1,7 +1,8 @@
 .overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(8px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -10,8 +11,9 @@
 
 .modal {
   background: var(--bg-secondary);
-  border: 1px solid var(--border);
+  border: 1px solid rgba(255, 255, 255, 0.06);
   border-radius: var(--radius-lg);
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.4);
   padding: var(--space-xl);
   width: 460px;
   max-width: 90vw;
@@ -20,8 +22,10 @@
 }
 
 .title {
+  font-family: var(--font-display);
   font-size: var(--text-lg);
-  font-weight: 600;
+  font-weight: 700;
+  letter-spacing: -0.02em;
   margin-bottom: var(--space-xs);
 }
 
@@ -44,7 +48,7 @@
   gap: var(--space-md);
   padding: var(--space-md);
   background: var(--bg-tertiary);
-  border: 2px solid var(--border);
+  border: 2px solid rgba(255, 255, 255, 0.04);
   border-radius: var(--radius-md);
   cursor: pointer;
   transition: border-color var(--transition-fast), background var(--transition-fast);
@@ -69,7 +73,7 @@
   width: 18px;
   height: 18px;
   border-radius: 50%;
-  border: 2px solid var(--border);
+  border: 2px solid rgba(255, 255, 255, 0.10);
   flex-shrink: 0;
   margin-top: 2px;
   display: flex;
@@ -108,8 +112,9 @@
 
 .cancelButton {
   padding: var(--space-sm) var(--space-lg);
-  border: 1px solid var(--border);
+  border: 1px solid rgba(255, 255, 255, 0.06);
   border-radius: var(--radius-md);
+  font-family: var(--font-display);
   font-size: var(--text-sm);
   color: var(--text-secondary);
   transition: background var(--transition-fast);
@@ -120,22 +125,25 @@
 }
 
 .cancelButton:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
+  outline: none;
+  box-shadow: 0 0 0 2px var(--bg-primary), 0 0 0 4px rgba(124, 106, 239, 0.5);
 }
 
 .exportButton {
   padding: var(--space-sm) var(--space-lg);
   background: var(--accent);
-  color: white;
+  color: #fff;
   border-radius: var(--radius-md);
+  font-family: var(--font-display);
   font-size: var(--text-sm);
   font-weight: 600;
-  transition: background var(--transition-fast);
+  letter-spacing: -0.01em;
+  transition: background var(--transition-fast), transform var(--transition-fast);
 }
 
 .exportButton:hover:not(:disabled) {
   background: var(--accent-hover);
+  transform: translateY(-1px);
 }
 
 .exportButton:disabled {
@@ -144,6 +152,6 @@
 }
 
 .exportButton:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
+  outline: none;
+  box-shadow: 0 0 0 2px var(--bg-primary), 0 0 0 4px rgba(124, 106, 239, 0.5);
 }

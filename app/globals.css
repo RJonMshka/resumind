@@ -1,36 +1,39 @@
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&family=Syne:wght@400;500;600;700;800&display=swap');
 
 :root {
-  --bg-primary: #0c0c0c;
-  --bg-secondary: #141414;
-  --bg-tertiary: #1e1e1e;
-  --bg-hover: #252525;
+  --bg-primary: #0a0a0b;
+  --bg-secondary: #111113;
+  --bg-tertiary: #1a1a1e;
+  --bg-hover: #222228;
 
-  --text-primary: #e8e8e8;
-  --text-secondary: #a0a0a0;
-  --text-muted: #555555;
+  --text-primary: #ededef;
+  --text-secondary: #8b8b8e;
+  --text-muted: #4e4e52;
 
-  --accent: #b8cc3a;
-  --accent-hover: #a3b530;
-  --accent-muted: rgba(184, 204, 58, 0.08);
+  --accent: #7c6aef;
+  --accent-hover: #6b59de;
+  --accent-muted: rgba(124, 106, 239, 0.10);
 
-  --green: #47ff8a;
-  --orange: #ff9f47;
-  --red: #ff4747;
+  --green: #3dd68c;
+  --orange: #e5a04b;
+  --red: #e5534b;
 
-  --border: #222222;
-  --border-focus: #444444;
+  --border: #1e1e22;
+  --border-focus: #7c6aef;
 
   --space-xs: 4px;
   --space-sm: 8px;
   --space-md: 16px;
   --space-lg: 24px;
   --space-xl: 32px;
+  --space-2xl: 48px;
+  --space-3xl: 64px;
 
   --font-sans: 'JetBrains Mono', monospace;
   --font-mono: 'JetBrains Mono', monospace;
   --font-display: 'Syne', sans-serif;
 
+  --text-2xs: 0.6875rem;
   --text-xs: 0.75rem;
   --text-sm: 0.875rem;
   --text-base: 1rem;
@@ -78,25 +81,31 @@ select {
   font-size: var(--text-sm);
   color: inherit;
   background: var(--bg-tertiary);
-  border: 1px solid var(--border);
+  border: 1px solid transparent;
   border-radius: var(--radius-sm);
   padding: var(--space-sm) var(--space-md);
   outline: none;
-  transition: border-color var(--transition-fast);
+  transition: border-color var(--transition-fast), background var(--transition-fast);
 }
 
 input:focus,
 textarea:focus,
 select:focus {
-  border-color: var(--border-focus);
+  border-color: rgba(124, 106, 239, 0.4);
+  background: rgba(124, 106, 239, 0.03);
 }
 
 select option {
-  background: #1a1a1a;
+  background: #1a1a1e;
 }
 
 textarea {
   resize: none;
+}
+
+:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--bg-primary), 0 0 0 4px rgba(124, 106, 239, 0.5);
 }
 
 ::-webkit-scrollbar {
@@ -109,4 +118,5 @@ textarea {
 
 ::-webkit-scrollbar-thumb {
   background: var(--border);
+  border-radius: 2px;
 }

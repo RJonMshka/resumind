@@ -2,7 +2,9 @@ import { Document, Page, View, Text, StyleSheet } from "@react-pdf/renderer";
 import type { StructuredResume } from "@/types";
 import { COLORS } from "./shared";
 
-const SIDEBAR_WIDTH = 170;
+const SIDEBAR_BG = "#1e293b";
+const SIDEBAR_ACCENT = "#94a3b8";
+const SIDEBAR_HEADING = "#e2e8f0";
 
 const styles = StyleSheet.create({
   page: {
@@ -10,78 +12,114 @@ const styles = StyleSheet.create({
     fontFamily: "Helvetica",
     fontSize: 10,
     color: COLORS.black,
-    lineHeight: 1.5,
+    lineHeight: 1.4,
   },
+
+  /* ---- Sidebar ---- */
   sidebar: {
-    width: SIDEBAR_WIDTH,
-    backgroundColor: "#1a1a2e",
+    width: 180,
+    backgroundColor: SIDEBAR_BG,
     color: COLORS.white,
-    paddingVertical: 36,
-    paddingHorizontal: 20,
-  },
-  main: {
-    flex: 1,
-    paddingTop: 36,
+    paddingTop: 44,
     paddingBottom: 48,
-    paddingHorizontal: 32,
+    paddingHorizontal: 22,
   },
   sidebarName: {
-    fontSize: 18,
+    fontSize: 17,
     fontFamily: "Helvetica-Bold",
     color: COLORS.white,
-    marginBottom: 12,
+    lineHeight: 1.3,
+    marginBottom: 20,
   },
   sidebarSection: {
-    marginTop: 16,
+    marginBottom: 22,
   },
   sidebarSectionTitle: {
-    fontSize: 10,
+    fontSize: 8.5,
     fontFamily: "Helvetica-Bold",
     textTransform: "uppercase",
-    letterSpacing: 1,
-    color: "#9e9eff",
-    marginBottom: 6,
-    paddingBottom: 3,
-    borderBottomWidth: 1,
-    borderBottomColor: "#333355",
+    letterSpacing: 1.5,
+    color: SIDEBAR_ACCENT,
+    marginBottom: 8,
+    paddingBottom: 4,
+    borderBottomWidth: 0.75,
+    borderBottomColor: "#334155",
   },
   sidebarText: {
-    fontSize: 9,
-    color: "#cccccc",
-    marginBottom: 2,
+    fontSize: 8.5,
+    color: SIDEBAR_HEADING,
+    marginBottom: 4,
+    lineHeight: 1.45,
   },
   sidebarSkill: {
-    fontSize: 9,
-    color: "#cccccc",
-    marginBottom: 3,
+    fontSize: 8.5,
+    color: SIDEBAR_HEADING,
+    marginBottom: 5,
     paddingLeft: 8,
+    lineHeight: 1.4,
+  },
+  sidebarEduBlock: {
+    marginBottom: 12,
+  },
+  sidebarEduDegree: {
+    fontSize: 8.5,
+    fontFamily: "Helvetica-Bold",
+    color: COLORS.white,
+    marginBottom: 2,
+    lineHeight: 1.35,
+  },
+  sidebarEduInstitution: {
+    fontSize: 8.5,
+    color: SIDEBAR_HEADING,
+    marginBottom: 2,
+  },
+  sidebarEduDates: {
+    fontSize: 8,
+    color: SIDEBAR_ACCENT,
+  },
+
+  /* ---- Main ---- */
+  main: {
+    flex: 1,
+    paddingTop: 44,
+    paddingBottom: 48,
+    paddingLeft: 30,
+    paddingRight: 40,
   },
   mainSectionTitle: {
-    fontSize: 13,
+    fontSize: 12,
     fontFamily: "Helvetica-Bold",
     textTransform: "uppercase",
     letterSpacing: 1,
-    color: "#1a1a2e",
-    marginTop: 16,
-    marginBottom: 6,
-    paddingBottom: 3,
-    borderBottomWidth: 2,
-    borderBottomColor: "#1a1a2e",
+    color: SIDEBAR_BG,
+    marginBottom: 10,
+    paddingBottom: 4,
+    borderBottomWidth: 1.5,
+    borderBottomColor: SIDEBAR_BG,
   },
+  mainSection: {
+    marginBottom: 22,
+  },
+
+  /* ---- Summary ---- */
   summary: {
     fontSize: 10,
     color: COLORS.darkGray,
-    marginBottom: 4,
+    lineHeight: 1.55,
   },
-  jobRow: {
+
+  /* ---- Experience ---- */
+  jobBlock: {
+    marginBottom: 14,
+  },
+  jobHeader: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "baseline",
-    marginTop: 8,
     marginBottom: 2,
   },
   jobTitle: {
-    fontSize: 11,
+    fontSize: 10.5,
     fontFamily: "Helvetica-Bold",
   },
   dates: {
@@ -91,12 +129,13 @@ const styles = StyleSheet.create({
   company: {
     fontSize: 10,
     color: COLORS.mediumGray,
-    marginBottom: 3,
+    marginBottom: 5,
   },
   bullet: {
     fontSize: 10,
     marginLeft: 10,
-    marginBottom: 2,
+    marginBottom: 3,
+    lineHeight: 1.45,
   },
 });
 
@@ -114,7 +153,7 @@ export default function ModernTemplate({ resume }: Props) {
         <View style={styles.sidebar}>
           <Text style={styles.sidebarName}>{contact.name}</Text>
 
-          {/* Contact Info */}
+          {/* Contact */}
           <View style={styles.sidebarSection}>
             <Text style={styles.sidebarSectionTitle}>Contact</Text>
             {contact.email && <Text style={styles.sidebarText}>{contact.email}</Text>}
@@ -124,7 +163,7 @@ export default function ModernTemplate({ resume }: Props) {
             {contact.website && <Text style={styles.sidebarText}>{contact.website}</Text>}
           </View>
 
-          {/* Skills in sidebar */}
+          {/* Skills */}
           {skills.length > 0 && (
             <View style={styles.sidebarSection}>
               <Text style={styles.sidebarSectionTitle}>Skills</Text>
@@ -134,17 +173,18 @@ export default function ModernTemplate({ resume }: Props) {
             </View>
           )}
 
-          {/* Education in sidebar */}
+          {/* Education */}
           {education.length > 0 && (
             <View style={styles.sidebarSection}>
               <Text style={styles.sidebarSectionTitle}>Education</Text>
               {education.map((edu, i) => (
-                <View key={i} style={{ marginBottom: 8 }}>
-                  <Text style={{ ...styles.sidebarText, fontFamily: "Helvetica-Bold", color: COLORS.white, fontSize: 9 }}>
-                    {edu.degree}
-                  </Text>
-                  <Text style={styles.sidebarText}>{edu.institution}</Text>
-                  {edu.dates && <Text style={{ ...styles.sidebarText, fontSize: 8 }}>{edu.dates}</Text>}
+                <View
+                  key={i}
+                  style={i < education.length - 1 ? styles.sidebarEduBlock : { ...styles.sidebarEduBlock, marginBottom: 0 }}
+                >
+                  <Text style={styles.sidebarEduDegree}>{edu.degree}</Text>
+                  <Text style={styles.sidebarEduInstitution}>{edu.institution}</Text>
+                  {edu.dates && <Text style={styles.sidebarEduDates}>{edu.dates}</Text>}
                 </View>
               ))}
             </View>
@@ -153,19 +193,25 @@ export default function ModernTemplate({ resume }: Props) {
 
         {/* Main Content */}
         <View style={styles.main}>
+          {/* Profile / Summary */}
           {summary && (
-            <View>
+            <View style={styles.mainSection}>
               <Text style={styles.mainSectionTitle}>Profile</Text>
               <Text style={styles.summary}>{summary}</Text>
             </View>
           )}
 
+          {/* Experience */}
           {experience.length > 0 && (
-            <View>
+            <View style={styles.mainSection}>
               <Text style={styles.mainSectionTitle}>Experience</Text>
               {experience.map((exp, i) => (
-                <View key={i} wrap={false}>
-                  <View style={styles.jobRow}>
+                <View
+                  key={i}
+                  style={i < experience.length - 1 ? styles.jobBlock : { ...styles.jobBlock, marginBottom: 0 }}
+                  wrap={false}
+                >
+                  <View style={styles.jobHeader}>
                     <Text style={styles.jobTitle}>{exp.title}</Text>
                     <Text style={styles.dates}>{exp.dates}</Text>
                   </View>

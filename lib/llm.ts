@@ -44,6 +44,7 @@ async function callAnthropic({ apiKey, model, systemPrompt, userMessage, maxToke
     body: JSON.stringify({
       model,
       max_tokens: maxTokens,
+      temperature: 0.2,
       system: systemPrompt,
       messages: [{ role: "user", content: userMessage }],
     }),
@@ -64,6 +65,7 @@ async function callOpenAI({ apiKey, model, systemPrompt, userMessage, maxTokens 
     body: JSON.stringify({
       model,
       max_tokens: maxTokens,
+      temperature: 0.2,
       messages: [
         { role: "system", content: systemPrompt },
         { role: "user", content: userMessage },
@@ -90,6 +92,7 @@ async function callOpenAICompat(baseUrl: string, { apiKey, model, systemPrompt, 
     body: JSON.stringify({
       model,
       max_tokens: maxTokens,
+      temperature: 0.2,
       messages: [
         { role: "system", content: systemPrompt },
         { role: "user", content: userMessage },
